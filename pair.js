@@ -622,7 +622,6 @@ case 'getdp': {
         await socket.sendMessage(sender, { 
             image: { url: ppUrl }, 
             caption: `🖼 *Here is your profile pic*
-            footer: `📌 ${botName}
             buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" }, type: 1 }],
             headerType: 4
         }, { quoted: metaQuote }); // <-- botName meta mention
