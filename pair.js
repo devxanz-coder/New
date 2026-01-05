@@ -621,9 +621,9 @@ case 'getdp': {
         // 🔹 Send DP with botName meta mention
         await socket.sendMessage(sender, { 
             image: { url: ppUrl }, 
-            caption: `🖼 *Here is your profile pic* ${q}get by}e${botName}`,
-            footer: `📌 ${botName} GETDP`,
-            buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MENU" }, type: 1 }],
+            caption: `🖼 *Here is your profile pic*
+            footer: `📌 ${botName}
+            buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" }, type: 1 }],
             headerType: 4
         }, { quoted: metaQuote }); // <-- botName meta mention
 
@@ -856,7 +856,7 @@ case 'cfn': {
       caption: `✅ Channel followed and saved!\n\nJID: ${jid}\nEmojis: ${emojiText}\nSaved by: @${senderIdSimple}`,
       footer: `📌 ${botName} FOLLOW CHANNEL`,
       mentions: [nowsender], // user mention
-      buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MENU" }, type: 1 }],
+      buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" }, type: 1 }],
       headerType: 4
     }, { quoted: metaQuote }); // <-- botName meta mention
 
@@ -915,7 +915,7 @@ case 'chr': {
       caption: `✅ Reacted successfully!\n\nChannel: ${channelJid}\nMessage: ${messageId}\nEmoji: ${reactEmoji}\nBy: @${senderIdSimple}`,
       footer: `📌 ${botName} REACTION`,
       mentions: [nowsender], // user mention
-      buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MENU" }, type: 1 }],
+      buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" }, type: 1 }],
       headerType: 4
     }, { quoted: metaQuote }); // <-- botName meta mention
 
@@ -1006,19 +1006,19 @@ case 'alive': {
     const seconds = Math.floor(uptime % 60);
 
     const text = `
-╭──❲ 👻 𝐀𝙻𝙸𝚅𝙴 𝐍𝙾𝚆 ❳──╮
-│ ● Status   : Online
-│ ● Owner   : ${config.OWNER_NAME || 'Kavindu • Ishan'}
-│ ● Uptime  : ${hours}h ${minutes}m ${seconds}s
-│ ● Platform : ${process.env.PLATFORM || 'Heroku'}
-│ ● Prefix  : ${config.PREFIX}
-╰──────────────❍
+╭───❂ 👾 𝐀𝙻𝙸𝚅𝙴 𝐍𝙾𝚆 ❂───╮
+│ 🎀 ● Status   : Online
+│ 🎀 ● Owner   : ${config.OWNER_NAME || 'Kavindu • Ishan'}
+│ 🎀 ● Uptime  : ${hours}h ${minutes}m ${seconds}s
+│ 🎀 ● Platform : ${process.env.PLATFORM || 'Heroku'}
+│ 🎀 ● Prefix  : ${config.PREFIX}
+╰──────────────❂
 
 `;
 
     const buttons = [
-      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MENU" }, type: 1 },
-      { buttonId: `${config.PREFIX}ping`, buttonText: { displayText: "👻 PING" }, type: 1 }
+      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" }, type: 1 },
+      { buttonId: `${config.PREFIX}ping`, buttonText: { displayText: "👻 𝐏𝙸𝙽𝙶" }, type: 1 }
     ];
 
     let imagePayload = String(logo).startsWith('http') ? { url: logo } : fs.readFileSync(logo);
@@ -1066,7 +1066,7 @@ case 'ping': {
       image: imagePayload,
       caption: text,
       footer: `${botName} 𝐏𝙸𝙽𝙶`,
-      buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MENU" }, type: 1 }],
+      buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" }, type: 1 }],
       headerType: 4
     }, { quoted: metaQuote });
 
@@ -1126,7 +1126,7 @@ case 'bots': {
     await socket.sendMessage(sender, {
       image: imagePayload,
       caption: text,
-      footer: `📊 ${botName} SESSION STATUS`,
+      footer: ``,
       buttons: [
         { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MENU" }, type: 1 },
         { buttonId: `${config.PREFIX}ping`, buttonText: { displayText: "👻 PING" }, type: 1 }
@@ -1593,28 +1593,28 @@ END:VCARD`
     };
 
     const text = `
-╭───❲ 🧿 𝐁𝙾𝚃 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄 ❳───╮
+╭────❂ 🧚 𝐁𝙾𝚃 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄 ❂────╮
 │
-│ 🕊️ ◆ *Oᴡɴᴇʀ :* ${config.OWNER_NAME || ''}
-│ 🕊️ ◆ *Vᴇʀꜱɪᴏɴ :* ${config.BOT_VERSION || '0.0001+'}
-│ 🕊️ ◆ *Hᴏꜱᴛ :* ${process.env.PLATFORM || 'Ashi linux'}
-│ 🕊️ ◆ *Uᴘᴛɪᴍᴇ :* ${hours}h ${minutes}m ${seconds}s
-│ 🕊️ ◆ *Cᴏᴍᴍᴀɴᴅꜱ :* 50+
-│ 🕊️ ◆ *Lᴇɴɢᴜᴀɢᴇ :* Jawa script
+│ 🎀 ◆ *Oᴡɴᴇʀ :* Dev xanz
+│ 🎀 ◆ *Vᴇʀꜱɪᴏɴ :* ${config.BOT_VERSION || '0.0001+'}
+│ 🎀 ◆ *Hᴏꜱᴛ :* ${process.env.PLATFORM || 'Ashi linux'}
+│ 🎀 ◆ *Uᴘᴛɪᴍᴇ :* ${hours}h ${minutes}m ${seconds}s
+│ 🎀 ◆ *Cᴏᴍᴍᴀɴᴅꜱ :* 50+
+│ 🎀 ◆ *Lᴇɴɢᴜᴀɢᴇ :* Java script
 │
-╰─────────────❍
+╰──────────────❂
 
-> *Jᴏɪɴ 🪪 ➠ https://whatsapp.com/channel/0029Vb6yaNMIt5s3s5iUK51g*
+> *Jᴏɪɴ🪪 ➠ https://whatsapp.com/channel/0029Vb6yaNMIt5s3s5iUK51g*
 
 
  ${config.BOT_FOOTER || ''}
 `.trim();
 
     const buttons = [
-      { buttonId: `${config.PREFIX}download`, buttonText: { displayText: "📥 DOWNLOAD" }, type: 1 },
-      { buttonId: `${config.PREFIX}tools`, buttonText: { displayText: "🧑‍🔧 USER" }, type: 1 },
-      { buttonId: `${config.PREFIX}settings`, buttonText: { displayText: "⚙️ SETTINGS" }, type: 1 },
-      { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👨‍💻 DEVELOPER" }, type: 1 }
+      { buttonId: `${config.PREFIX}download`, buttonText: { displayText: "📥 𝐃𝙾𝚆𝙽𝙻𝙾𝙰𝙳" }, type: 1 },
+      { buttonId: `${config.PREFIX}tools`, buttonText: { displayText: "🧑‍🔧 𝐔ꜱᴇʀ" }, type: 1 },
+      { buttonId: `${config.PREFIX}settings`, buttonText: { displayText: "⚙️ 𝐒𝙴𝚃𝚃𝙸𝙽𝙶𝚂" }, type: 1 },
+      { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👨‍💻 𝐃𝙴𝚅𝙴𝙻𝙾𝙿𝙴𝚁" }, type: 1 }
     ];
 
     const defaultImg = 'https://files.catbox.moe/i6kedi.jpg';
@@ -1678,21 +1678,22 @@ END:VCARD`
     };
 
     const text = `
-╭──❲ 📥 DOWNLOAD COMMANDS ❳─╮
+╭──❂ 📥 DOWNLOAD COMMANDS ❂─╮
 │
-│➠│🎀 ${config.PREFIX}song (query) 
-│➠│🎀 ${config.PREFIX}tiktok (url)
-│➠│🎀 ${config.PREFIX}video (query)  
-│➠│🎀 ${config.PREFIX}apksearch (app name)
-│➠│🎀 ${config.PREFIX}getdp (number)
-│➠│🎀 ${config.PREFIX}save (reply to status)
-│➠│🎀 ${config.PREFIX}img (query)
+│ 🎀 ◆ ${config.PREFIX}song (query) 
+│ 🎀 ◆ ${config.PREFIX}csong (query)
+│ 🎀 ◆ ${config.PREFIX}tiktok (url)
+│ 🎀 ◆ ${config.PREFIX}video (query)  
+│ 🎀 ◆ ${config.PREFIX}apksearch (app name)
+│ 🎀 ◆ ${config.PREFIX}getdp (number)
+│ 🎀 ◆ ${config.PREFIX}save (reply to status)
+│ 🎀 ◆ ${config.PREFIX}img (query)
 │
-╰───────────────❍`.trim();
+╰───────────────❂`.trim();
 
     const buttons = [
-      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MAIN MENU" }, type: 1 },
-      { buttonId: `${config.PREFIX}user`, buttonText: { displayText: "🧑‍🔧 USER MENU" }, type: 1 }
+      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄" }, type: 1 },
+      { buttonId: `${config.PREFIX}user`, buttonText: { displayText: "🧑‍🔧 𝐔𝚂𝙴𝚁 𝐌𝙴𝙽𝚄" }, type: 1 }
     ];
 
     // 🔹 ONLY ADDITION: image + caption
@@ -1713,7 +1714,7 @@ END:VCARD`
 		  }
 
 
-// ==================== TOOLS MENU ====================
+// ==================== USER MENU ====================
 case 'user': {
   try { await socket.sendMessage(sender, { react: { text: "🧑‍🔧", key: msg.key } }); } catch(e){}
 
@@ -1744,22 +1745,22 @@ END:VCARD`
     };
 
     const text = `
-╭───❲ 🧑‍🔧 USER COMMANDS ❳───╮
+╭───❂ 🧑‍🔧 USER COMMANDS ❂───╮
 │
-│➠│🎀 ${config.PREFIX}jid   
-│➠│🎀 ${config.PREFIX}tagall (message)  
-│➠│🎀 ${config.PREFIX}online  
-│➠│🎀 ${config.PREFIX}block (number)  
-│➠│🎀 ${config.PREFIX}unblock (number)  
-│➠│🎀 ${config.PREFIX}ping  
-│➠│🎀 ${config.PREFIX}alive  
+│🎀 ◆ ${config.PREFIX}jid   
+│🎀 ◆ ${config.PREFIX}tagall (message)  
+│🎀 ◆ ${config.PREFIX}online  
+│🎀 ◆ ${config.PREFIX}block (number)  
+│🎀 ◆ ${config.PREFIX}unblock (number)  
+│🎀 ◆ ${config.PREFIX}ping  
+│🎀 ◆ ${config.PREFIX}alive  
 │
-╰─────────────────❍`.trim();
+╰─────────────────❂`.trim();
 
 	  
     const buttons = [
-      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MAIN MENU" }, type: 1 },
-      { buttonId: `${config.PREFIX}settings`, buttonText: { displayText: "⚙️ SETTINGS" }, type: 1 }
+      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄" }, type: 1 },
+      { buttonId: `${config.PREFIX}settings`, buttonText: { displayText: "⚙️ 𝐒𝙴𝚃𝚃𝙸𝙽𝙶𝚂" }, type: 1 }
     ];
 
         // 🔹 ONLY ADDITION: image + caption
@@ -1808,20 +1809,20 @@ END:VCARD`
     };
 
     const text = `
-╭──❲ ⚙ SETTINGS COMMANDS ❳──╮
+╭──❂ ⚙ SETTINGS COMMANDS ❂──╮
 │
-│➠│🎀 ${config.PREFIX}setbotname (name) 
-│➠│🎀 ${config.PREFIX}setlogo (reply to image/url)  
-│➠│🎀 ${config.PREFIX}showconfig  
-│➠│🎀 ${config.PREFIX}resetconfig  
-│➠│🎀 ${config.PREFIX}deleteme  
+│🎀 ◆ ${config.PREFIX}setbotname (name) 
+│🎀 ◆ ${config.PREFIX}setlogo (reply to image/url)  
+│🎀 ◆ ${config.PREFIX}showconfig  
+│🎀 ◆ ${config.PREFIX}resetconfig  
+│🎀 ◆ ${config.PREFIX}deleteme  
 │
-╰─────────────────❍`.trim();
+╰─────────────────❂`.trim();
 
 	  
     const buttons = [
-      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MAIN MENU" }, type: 1 },
-      { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👨‍💻 DEVELOPER" }, type: 1 }
+      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄" }, type: 1 },
+      { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👨‍💻 𝐃𝙴𝚅𝙴𝙻𝙾𝙿𝙴𝚁" }, type: 1 }
     ];
 
         // 🔹 ONLY ADDITION: image + caption
