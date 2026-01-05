@@ -1604,7 +1604,7 @@ END:VCARD`
     };
 
     const text = `
-╭────❂ 🧚 𝐁𝙾𝚃 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄 ❂────╮
+╭──❂ 🧚 𝐁𝙾𝚃 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄 ❂──╮
 │
 │ 🎀 ◆ *Oᴡɴᴇʀ :* Dev xanz
 │ 🎀 ◆ *Vᴇʀꜱɪᴏɴ :* ${config.BOT_VERSION || '0.0001+'}
@@ -1689,7 +1689,7 @@ END:VCARD`
     };
 
     const text = `
-╭──❂ 📥 DOWNLOAD COMMANDS ❂─╮
+╭─❂ 📥 𝐃𝙾𝚆𝙽𝙻𝙾𝙰𝙳 𝐂𝙾𝙼𝙼𝙰𝙽𝙳𝚂 ❂─╮
 │
 │ 🎀 ◆ ${config.PREFIX}song (query) 
 │ 🎀 ◆ ${config.PREFIX}csong (query)
@@ -1756,7 +1756,7 @@ END:VCARD`
     };
 
     const text = `
-╭───❂ 🧑‍🔧 USER COMMANDS ❂───╮
+╭─❂ 🧑‍🔧 𝐔𝚂𝙴𝚁 𝐂𝙾𝙼𝙼𝙰𝙽𝙳𝚂❂─╮
 │
 │🎀 ◆ ${config.PREFIX}jid   
 │🎀 ◆ ${config.PREFIX}tagall (message)  
@@ -1820,7 +1820,7 @@ END:VCARD`
     };
 
     const text = `
-╭──❂ ⚙ SETTINGS COMMANDS ❂──╮
+╭─❂ ⚙ 𝐒𝙴𝚃𝚃𝙸𝙽𝙶𝚂 𝐂𝙾𝙼𝙼𝙰𝙽𝙳𝚂 ❂─╮
 │
 │🎀 ◆ ${config.PREFIX}setbotname (name) 
 │🎀 ◆ ${config.PREFIX}setlogo (reply to image/url)  
@@ -1890,8 +1890,8 @@ END:VCARD`
 `.trim();
 
     const buttons = [
-      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MAIN MENU" }, type: 1 },
-      { buttonId: `${config.PREFIX}settings`, buttonText: { displayText: "⚙️ SETTINGS" }, type: 1 }
+      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄" }, type: 1 },
+      { buttonId: `${config.PREFIX}settings`, buttonText: { displayText: "⚙️ 𝐒𝙴𝚃𝚃𝙸𝙽𝙶𝚂" }, type: 1 }
     ];
 
         // 🔹 ONLY ADDITION: image + caption
