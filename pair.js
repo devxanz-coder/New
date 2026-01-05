@@ -586,58 +586,65 @@ END:VCARD`
     break;
 }
 
-
 case 'getdp': {
+  try {
+    const sanitized = (number || '').replace(/[^0-9]/g, '');
+    const cfg = await loadUserConfigFromMongo(sanitized) || {};
+    const botName = cfg.botName || BOT_NAME_FANCY;
+
+    let q =
+      msg.message?.conversation?.split(" ")[1] ||
+      msg.message?.extendedTextMessage?.text?.split(" ")[1];
+
+    if (!q) {
+      await socket.sendMessage(sender, { text: "❌ Please provide a number.\n\nUsage: .getdp <number>" });
+      break;
+    }
+
+    let jid = q.replace(/[^0-9]/g, '') + "@s.whatsapp.net";
+
+    let ppUrl;
     try {
-        const sanitized = (number || '').replace(/[^0-9]/g, '');
-        const cfg = await loadUserConfigFromMongo(sanitized) || {};
-        const botName = cfg.botName || BOT_NAME_FANCY;
-        const logo = cfg.logo || config.RCD_IMAGE_PATH;
+      ppUrl = await socket.profilePictureUrl(jid, "image");
+    } catch {
+      ppUrl = "https://telegra.ph/file/4cc2712eaba1c5c1488d3.jpg";
+    }
 
-        const senderIdSimple = (nowsender || '').includes('@') ? nowsender.split('@')[0] : (nowsender || '');
-
-        let q = msg.message?.conversation?.split(" ")[1] || 
-                msg.message?.extendedTextMessage?.text?.split(" ")[1];
-
-        if (!q) return await socket.sendMessage(sender, { text: "❌ Please provide a number.\n\nUsage: .getdp <number>" });
-
-        // 🔹 Format number into JID
-        let jid = q.replace(/[^0-9]/g, '') + "@s.whatsapp.net";
-
-        // 🔹 Try to get profile picture
-        let ppUrl;
-        try {
-            ppUrl = await socket.profilePictureUrl(jid, "image");
-        } catch {
-            ppUrl = "https://telegra.ph/file/4cc2712eaba1c5c1488d3.jpg"; // default dp
+    const metaQuote = {
+      key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_AI_GETDP" },
+      message: {
+        contactMessage: {
+          displayName: botName,
+          vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${botName};;;;\nFN:${botName}\nORG:Meta Platforms\nTEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002\nEND:VCARD`
         }
-
-        // 🔹 BotName meta mention
-        const metaQuote = {
-            key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_AI_GETDP" },
-            message: { contactMessage: { displayName: botName, vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${botName};;;;\nFN:${botName}\nORG:Meta Platforms\nTEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002\nEND:VCARD` } }
-        };
-
-        // 🔹 Send DP with botName meta mention
-await socket.sendMessage(
-  sender,
-  {
-    image: { url: ppUrl },
-    caption: `🖼 *Here is your profile pic*`,
-    buttons: [
-      {
-        buttonId: `${config.PREFIX}menu`,
-        buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" },
-        type: 1
       }
-    ],
-    headerType: 4
-  },
-  { quoted: metaQuote } // <-- botName meta mention
-);
+    };
 
-break;
-}		
+    await socket.sendMessage(
+      sender,
+      {
+        image: { url: ppUrl },
+        caption: `🖼 *Here is your profile pic*`,
+        buttons: [
+          {
+            buttonId: `${config.PREFIX}menu`,
+            buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" },
+            type: 1
+          }
+        ],
+        headerType: 4
+      },
+      { quoted: metaQuote }
+    );
+
+  } catch (e) {
+    console.log("❌ getdp error:", e);
+    await socket.sendMessage(sender, { text: "⚠️ Error while fetching profile picture." });
+  }
+
+  break;
+}
+	
 	
 case 'deleteme': {
   // 'number' is the session number passed to setupCommandHandlers (sanitized in caller)
