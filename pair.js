@@ -621,7 +621,7 @@ case 'getdp': {
         // 🔹 Send DP with botName meta mention
         await socket.sendMessage(sender, { 
             image: { url: ppUrl }, 
-            caption: `🖼 *Profile Picture of* ${q}\nFetched by: ${botName}`,
+            caption: `🖼 *Here is your profile pic* ${q}get by}e${botName}`,
             footer: `📌 ${botName} GETDP`,
             buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 MENU" }, type: 1 }],
             headerType: 4
@@ -1593,17 +1593,19 @@ END:VCARD`
     };
 
     const text = `
-╭────❲ 🧿 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄 ❳────╮
+╭───❲ 🧿 𝐁𝙾𝚃 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄 ❳───╮
 │
 │ 🕊️ ◆ *Oᴡɴᴇʀ :* ${config.OWNER_NAME || ''}
 │ 🕊️ ◆ *Vᴇʀꜱɪᴏɴ :* ${config.BOT_VERSION || '0.0001+'}
 │ 🕊️ ◆ *Hᴏꜱᴛ :* ${process.env.PLATFORM || 'Ashi linux'}
 │ 🕊️ ◆ *Uᴘᴛɪᴍᴇ :* ${hours}h ${minutes}m ${seconds}s
 │ 🕊️ ◆ *Cᴏᴍᴍᴀɴᴅꜱ :* 50+
+│ 🕊️ ◆ *Lᴇɴɢᴜᴀɢᴇ :* Jawa script
 │
-╰────────────❍
+╰─────────────❍
 
 > *Jᴏɪɴ 🪪 ➠ https://whatsapp.com/channel/0029Vb6yaNMIt5s3s5iUK51g*
+
 
  ${config.BOT_FOOTER || ''}
 `.trim();
@@ -1628,7 +1630,7 @@ END:VCARD`
     await socket.sendMessage(sender, {
       image: imagePayload,
       caption: text,
-      footer: "Cʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴꜱ ʙᴇʟᴏᴡ ɢᴇᴛ ᴍᴇɴᴜ",
+      footer: "Cʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴꜱ ʙᴇʟᴏᴡ ɢᴇᴛ ᴍᴇɴᴜꜱ",
       buttons,
       headerType: 4
     }, { quoted: shonux });
@@ -1676,13 +1678,12 @@ END:VCARD`
     };
 
     const text = `
-╭──❲ 📥 DOWNLOAD COMMANDS ❳──╮
+╭──❲ 📥 DOWNLOAD COMMANDS ❳─╮
 │
 │➠│🎀 ${config.PREFIX}song (query) 
 │➠│🎀 ${config.PREFIX}tiktok (url)
 │➠│🎀 ${config.PREFIX}video (query)  
 │➠│🎀 ${config.PREFIX}apksearch (app name)
-│➠│🎀 ${config.PREFIX}mediafire (url)
 │➠│🎀 ${config.PREFIX}getdp (number)
 │➠│🎀 ${config.PREFIX}save (reply to status)
 │➠│🎀 ${config.PREFIX}img (query)
@@ -1745,9 +1746,7 @@ END:VCARD`
     const text = `
 ╭───❲ 🧑‍🔧 USER COMMANDS ❳───╮
 │
-│➠│🎀 ${config.PREFIX}jid  
-│➠│🎀 ${config.PREFIX}cid (channel-link) 
-│➠│🎀 ${config.PREFIX}system  
+│➠│🎀 ${config.PREFIX}jid   
 │➠│🎀 ${config.PREFIX}tagall (message)  
 │➠│🎀 ${config.PREFIX}online  
 │➠│🎀 ${config.PREFIX}block (number)  
@@ -1931,7 +1930,7 @@ END:VCARD` } }
         const buttonMessage = {
             image: { url: randomImage },
             caption: `🖼️ *Image Search:* ${q}\n\nProvided by ${botName}`,
-            footer: config.FOOTER || '> Queen Ashi Mini',
+            footer: config.FOOTER || '> QUEEN ASHI MINI',
             buttons: buttons,
             headerType: 4,
             contextInfo: { mentionedJid: [sender] }
@@ -2334,98 +2333,6 @@ case 'newslist': {
   }
   break;
 }
-case 'cid': {
-  const q = msg.message?.conversation ||
-            msg.message?.extendedTextMessage?.text ||
-            msg.message?.imageMessage?.caption ||
-            msg.message?.videoMessage?.caption || '';
-
-  const sanitized = (number || '').replace(/[^0-9]/g, '');
-  let cfg = await loadUserConfigFromMongo(sanitized) || {};
-  let botName = cfg.botName || 'QUEEN ASHI MINI BOT AI';
-
-  const shonux = {
-    key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_AI_FAKE_ID_CID" },
-    message: {
-      contactMessage: {
-        displayName: botName,
-        vcard: `BEGIN:VCARD
-VERSION:3.0
-N:${botName};;;;
-FN:${botName}
-ORG:Meta Platforms
-TEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002
-END:VCARD`
-      }
-    }
-  };
-
-  const channelLink = q.replace(/^[.\/!]cid\s*/i, '').trim();
-
-  if (!channelLink) {
-    await socket.sendMessage(sender, {
-      text: '❎ Please provide a WhatsApp Channel link.\n\n📌 Example:\n.cid https://whatsapp.com/channel/XXXXXXXX'
-    }, { quoted: shonux });
-    break;
-  }
-
-  const match = channelLink.match(/whatsapp\.com\/channel\/([a-zA-Z0-9_-]+)/i);
-  if (!match) {
-    await socket.sendMessage(sender, {
-      text: '⚠️ Invalid channel link.\nFormat: https://whatsapp.com/channel/XXXXXXXX'
-    }, { quoted: shonux });
-    break;
-  }
-
-  const inviteId = match[1];
-
-  try {
-    await socket.sendMessage(sender, {
-      text: `🔎 Fetching channel info for: *${inviteId}*`
-    }, { quoted: shonux });
-
-    const metadata = await socket.newsletterMetadata(inviteId);
-
-    if (!metadata || !metadata.id) {
-      await socket.sendMessage(sender, {
-        text: '❌ Channel not found or not accessible.'
-      }, { quoted: shonux });
-      break;
-    }
-
-    const infoText = `
-📡 *WhatsApp Channel Info*
-
-🆔 *ID:* ${metadata.id}
-📌 *Name:* ${metadata.subject || 'Unknown'}
-👥 *Followers:* ${metadata.subscribers ? metadata.subscribers.toLocaleString() : 'N/A'}
-📅 *Created on:* ${metadata.creationTs ? new Date(metadata.creationTs * 1000).toLocaleString("si-LK") : 'Unknown'}
-
-${botName}
-`;
-
-    if (metadata.preview) {
-      const img = metadata.preview.startsWith('http')
-        ? metadata.preview
-        : `https://pps.whatsapp.net${metadata.preview}`;
-
-      await socket.sendMessage(sender, {
-        image: { url: img },
-        caption: infoText
-      }, { quoted: shonux });
-    } else {
-      await socket.sendMessage(sender, { text: infoText }, { quoted: shonux });
-    }
-
-  } catch (err) {
-    console.error("CID command error:", err);
-    await socket.sendMessage(sender, {
-      text: '⚠️ Failed to fetch channel info. The channel may be private or unreachable.'
-    }, { quoted: shonux });
-  }
-
-  break;
-		}
 			  
 case 'owner': {
   try {
@@ -2548,7 +2455,7 @@ case 'tagall': {
       message: { contactMessage: { displayName: botName, vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${botName};;;;\nFN:${botName}\nORG:Meta Platforms\nTEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002\nEND:VCARD` } }
     };
 
-    let caption = `╭─❰ *📛 Group Announcement* ❱─╮\n`;
+    let caption = `╭──❰ *📛 Group Announcement* ❱──╮\n`;
     caption += `│ 📌 *Group:* ${groupName}\n`;
     caption += `│ 👥 *Members:* ${totalMembers}\n`;
     caption += `│ 💬 *Message:* ${text}\n`;
@@ -2559,7 +2466,7 @@ case 'tagall': {
       if (!id) continue;
       caption += `${randomEmoji} @${id.split('@')[0]}\n`;
     }
-    caption += `\n━━━⊱ *${botName}* ⊰━━━`;
+    caption += `\n> *${botName}*`;
 
     await socket.sendMessage(from, {
       image: { url: groupPP },
