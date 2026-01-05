@@ -1605,8 +1605,6 @@ END:VCARD`
 
 > *Jᴏɪɴ 🪪 ➠ https://whatsapp.com/channel/0029Vb6yaNMIt5s3s5iUK51g*
 
-> *Cʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴꜱ ʙᴇʟᴏᴡ ɢᴇᴛ ᴍᴇɴᴜ'ꜱ*
-
  ${config.BOT_FOOTER || ''}
 `.trim();
 
@@ -1630,7 +1628,7 @@ END:VCARD`
     await socket.sendMessage(sender, {
       image: imagePayload,
       caption: text,
-      footer: "",
+      footer: "Cʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴꜱ ʙᴇʟᴏᴡ ɢᴇᴛ ᴍᴇɴᴜ",
       buttons,
       headerType: 4
     }, { quoted: shonux });
@@ -1678,7 +1676,7 @@ END:VCARD`
     };
 
     const text = `
-╭───❲ 📥 DOWNLOAD MENU ❳───╮
+╭──❲ 📥 DOWNLOAD COMMANDS ❳──╮
 │
 │➠│🎀 ${config.PREFIX}song (query) 
 │➠│🎀 ${config.PREFIX}tiktok (url)
@@ -1745,7 +1743,7 @@ END:VCARD`
     };
 
     const text = `
-╭──❲ 🧑‍🔧 USER COMMANDS ❳──╮
+╭───❲ 🧑‍🔧 USER COMMANDS ❳───╮
 │
 │➠│🎀 ${config.PREFIX}jid  
 │➠│🎀 ${config.PREFIX}cid (channel-link) 
@@ -1811,7 +1809,7 @@ END:VCARD`
     };
 
     const text = `
-╭───❲ ⚙ SETTINGS MENU ❳───╮
+╭──❲ ⚙ SETTINGS COMMANDS ❳──╮
 │
 │➠│🎀 ${config.PREFIX}setbotname (name) 
 │➠│🎀 ${config.PREFIX}setlogo (reply to image/url)  
@@ -2174,7 +2172,7 @@ case 'grouplist': {
 
       await socket.sendMessage(sender, {
         text: textMsg,
-        footer: `🤖 Powered by ${botName}`
+        footer: `Powered by ${botName}`
       });
 
       // Add short delay to avoid spam
@@ -2192,221 +2190,6 @@ case 'grouplist': {
   break;
 }
 
-
-
-case 'savecontact':
-case 'gvcf2':
-case 'scontact':
-case 'savecontacts': {
-  try {
-    const text = args.join(" ").trim(); // ✅ Define text variable
-
-    if (!text) {
-      return await socket.sendMessage(sender, { 
-        text: "📌 *Usage:* .savecontact <group JID>\n📥 Example: .savecontact 9477xxxxxxx-123@g.us" 
-      }, { quoted: msg });
-    }
-
-    const groupJid = text.trim();
-
-    // ✅ Validate JID
-    if (!groupJid.endsWith('@g.us')) {
-      return await socket.sendMessage(sender, { 
-        text: "❌ *Invalid group JID*. Must end with @g.us" 
-      }, { quoted: msg });
-    }
-
-    let groupMetadata;
-    try {
-      groupMetadata = await socket.groupMetadata(groupJid);
-    } catch {
-      return await socket.sendMessage(sender, { 
-        text: "❌ *Invalid group JID* or bot not in that group.*" 
-      }, { quoted: msg });
-    }
-
-    const { participants, subject } = groupMetadata;
-    let vcard = '';
-    let index = 1;
-
-    await socket.sendMessage(sender, { 
-      text: `🔍 Fetching contact names from *${subject}*...` 
-    }, { quoted: msg });
-
-    // ✅ Loop through each participant
-    for (const participant of participants) {
-      const num = participant.id.split('@')[0];
-      let name = num; // default name = number
-
-      try {
-        // Try to fetch from contacts or participant
-        const contact = socket.contacts?.[participant.id] || {};
-        if (contact?.notify) name = contact.notify;
-        else if (contact?.vname) name = contact.vname;
-        else if (contact?.name) name = contact.name;
-        else if (participant?.name) name = participant.name;
-      } catch {
-        name = `Contact-${index}`;
-      }
-
-      // ✅ Add vCard entry
-      vcard += `BEGIN:VCARD\n`;
-      vcard += `VERSION:3.0\n`;
-      vcard += `FN:${index}. ${name}\n`; // 👉 Include index number + name
-      vcard += `TEL;type=CELL;type=VOICE;waid=${num}:+${num}\n`;
-      vcard += `END:VCARD\n`;
-      index++;
-    }
-
-    // ✅ Create a safe file name from group name
-    const safeSubject = subject.replace(/[^\w\s]/gi, "_");
-    const tmpDir = path.join(os.tmpdir(), `contacts_${Date.now()}`);
-    fs.ensureDirSync(tmpDir);
-
-    const filePath = path.join(tmpDir, `contacts-${safeSubject}.vcf`);
-    fs.writeFileSync(filePath, vcard.trim());
-
-    await socket.sendMessage(sender, { 
-      text: `📁 *${participants.length}* contacts found in group *${subject}*.\n💾 Preparing VCF file...`
-    }, { quoted: msg });
-
-    await delay(1500);
-
-    // ✅ Send the .vcf file
-    await socket.sendMessage(sender, {
-      document: fs.readFileSync(filePath),
-      mimetype: 'text/vcard',
-      fileName: `contacts-${safeSubject}.vcf`,
-      caption: `✅ *Contacts Exported Successfully!*\n👥 Group: *${subject}*\n📇 Total Contacts: *${participants.length}*\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝙲𝙷𝙼𝙰 𝙼𝙳`
-    }, { quoted: msg });
-
-    // ✅ Cleanup temp file
-    try {
-      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-    } catch (cleanupError) {
-      console.warn('Failed to cleanup temp file:', cleanupError);
-    }
-
-  } catch (err) {
-    console.error('Save contact error:', err);
-    await socket.sendMessage(sender, { 
-      text: `❌ Error: ${err.message || err}` 
-    }, { quoted: msg });
-  }
-  break;
-}
-
-
-
-case 'mediafire':
-case 'mf':
-case 'mfdl': {
-    try {
-        const text = (msg.message.conversation || msg.message.extendedTextMessage?.text || '').trim();
-        const url = text.split(" ")[1]; // .mediafire <link>
-
-        // ✅ Load bot name dynamically
-        const sanitized = (number || '').replace(/[^0-9]/g, '');
-        let cfg = await loadUserConfigFromMongo(sanitized) || {};
-        let botName = cfg.botName || 'QUEEN ASHI MINI BOT AI';
-
-        // ✅ Fake Meta contact message (like Facebook style)
-        const shonux = {
-            key: {
-                remoteJid: "status@broadcast",
-                participant: "0@s.whatsapp.net",
-                fromMe: false,
-                id: "META_AI_FAKE_ID_MEDIAFIRE"
-            },
-            message: {
-                contactMessage: {
-                    displayName: botName,
-                    vcard: `BEGIN:VCARD
-VERSION:3.0
-N:${botName};;;;
-FN:${botName}
-ORG:Meta Platforms
-TEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002
-END:VCARD`
-                }
-            }
-        };
-
-        if (!url) {
-            return await socket.sendMessage(sender, {
-                text: '🚫 *Please send a MediaFire link.*\n\nExample: .mediafire <url>'
-            }, { quoted: shonux });
-        }
-
-        // ⏳ Notify start
-        await socket.sendMessage(sender, { react: { text: '📥', key: msg.key } });
-        await socket.sendMessage(sender, { text: '*⏳ Fetching MediaFire file info...*' }, { quoted: shonux });
-
-        // 🔹 Call API
-        let api = `https:///danuz-mediafire-api.vercel.app/api/mediafire?url=${encodeURIComponent(url)}`;
-        let { data } = await axios.get(api);
-
-        if (!data.success || !data.result) {
-            return await socket.sendMessage(sender, { text: '❌ *Failed to fetch MediaFire file.*' }, { quoted: shonux });
-        }
-
-        const result = data.result;
-        const title = result.title || result.filename;
-        const filename = result.filename;
-        const fileSize = result.size;
-        const downloadUrl = result.url;
-
-        const caption = `📦 *${title}*\n\n` +
-			
-                        `📁 *Filename:* ${filename}\n` +
-                        `📏 *Size:* ${fileSize}\n` +
-                        `🌐 *From:* ${result.from}\n` +
-                        `📅 *Date:* ${result.date}\n` +
-                        `🕑 *Time:* ${result.time}\n\n` +
-			
-                        `✅ Downloaded by ${botName}`;
-
-        // 🔹 Send file automatically (document type for .zip etc.)
-        await socket.sendMessage(sender, {
-            document: { url: downloadUrl },
-            fileName: filename,
-            mimetype: 'application/octet-stream',
-            caption: caption
-        }, { quoted: shonux });
-
-    } catch (err) {
-        console.error("Error in MediaFire downloader:", err);
-
-        // ✅ In catch also send Meta mention style
-        const sanitized = (number || '').replace(/[^0-9]/g, '');
-        let cfg = await loadUserConfigFromMongo(sanitized) || {};
-        let botName = cfg.botName || 'QUEEN ASHI MINI BOT AI';
-
-        const shonux = {
-            key: {
-                remoteJid: "status@broadcast",
-                participant: "0@s.whatsapp.net",
-                fromMe: false,
-                id: "META_AI_FAKE_ID_MEDIAFIRE"
-            },
-            message: {
-                contactMessage: {
-                    displayName: botName,
-                    vcard: `BEGIN:VCARD
-VERSION:3.0
-N:${botName};;;;
-FN:${botName}
-ORG:Meta Platforms
-TEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002
-END:VCARD`
-                }
-            }
-        };
-
-        await socket.sendMessage(sender, { text: '*❌ Internal Error. Please try again later.*' }, { quoted: shonux });
-    }
-    break;
-}
 case 'apksearch':
 case 'apks':
 case 'apkfind': {
@@ -2552,108 +2335,98 @@ case 'newslist': {
   break;
 }
 case 'cid': {
-    // Extract query from message
-    const q = msg.message?.conversation ||
-              msg.message?.extendedTextMessage?.text ||
-              msg.message?.imageMessage?.caption ||
-              msg.message?.videoMessage?.caption || '';
+  const q = msg.message?.conversation ||
+            msg.message?.extendedTextMessage?.text ||
+            msg.message?.imageMessage?.caption ||
+            msg.message?.videoMessage?.caption || '';
 
-    // ✅ Dynamic botName load
-    const sanitized = (number || '').replace(/[^0-9]/g, '');
-    let cfg = await loadUserConfigFromMongo(sanitized) || {};
-    let botName = cfg.botName || 'QUEEN ASHI MINI BOT AI';
+  const sanitized = (number || '').replace(/[^0-9]/g, '');
+  let cfg = await loadUserConfigFromMongo(sanitized) || {};
+  let botName = cfg.botName || 'QUEEN ASHI MINI BOT AI';
 
-    // ✅ Fake Meta AI vCard (for quoted msg)
-    const shonux = {
-        key: {
-            remoteJid: "status@broadcast",
-            participant: "0@s.whatsapp.net",
-            fromMe: false,
-            id: "META_AI_FAKE_ID_CID"
-        },
-        message: {
-            contactMessage: {
-                displayName: botName,
-                vcard: `BEGIN:VCARD
+  const shonux = {
+    key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_AI_FAKE_ID_CID" },
+    message: {
+      contactMessage: {
+        displayName: botName,
+        vcard: `BEGIN:VCARD
 VERSION:3.0
 N:${botName};;;;
 FN:${botName}
 ORG:Meta Platforms
 TEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002
 END:VCARD`
-            }
-        }
-    };
+      }
+    }
+  };
 
-    // Clean command prefix (.cid, /cid, !cid, etc.)
-    const channelLink = q.replace(/^[.\/!]cid\s*/i, '').trim();
+  const channelLink = q.replace(/^[.\/!]cid\s*/i, '').trim();
 
-    // Check if link is provided
-    if (!channelLink) {
-        return await socket.sendMessage(sender, {
-            text: '❎ Please provide a WhatsApp Channel link.\n\n📌 *Example:* .cid https://whatsapp.com/channel/123456789'
-        }, { quoted: shonux });
+  if (!channelLink) {
+    await socket.sendMessage(sender, {
+      text: '❎ Please provide a WhatsApp Channel link.\n\n📌 Example:\n.cid https://whatsapp.com/channel/XXXXXXXX'
+    }, { quoted: shonux });
+    break;
+  }
+
+  const match = channelLink.match(/whatsapp\.com\/channel\/([a-zA-Z0-9_-]+)/i);
+  if (!match) {
+    await socket.sendMessage(sender, {
+      text: '⚠️ Invalid channel link.\nFormat: https://whatsapp.com/channel/XXXXXXXX'
+    }, { quoted: shonux });
+    break;
+  }
+
+  const inviteId = match[1];
+
+  try {
+    await socket.sendMessage(sender, {
+      text: `🔎 Fetching channel info for: *${inviteId}*`
+    }, { quoted: shonux });
+
+    const metadata = await socket.newsletterMetadata(inviteId);
+
+    if (!metadata || !metadata.id) {
+      await socket.sendMessage(sender, {
+        text: '❌ Channel not found or not accessible.'
+      }, { quoted: shonux });
+      break;
     }
 
-    // Validate link
-    const match = channelLink.match(/whatsapp\.com\/channel\/([\w-]+)/);
-    if (!match) {
-        return await socket.sendMessage(sender, {
-            text: '⚠️ *Invalid channel link format.*\n\nMake sure it looks like:\nhttps://whatsapp.com/channel/xxxxxxxxx'
-        }, { quoted: shonux });
-    }
-
-    const inviteId = match[1];
-
-    try {
-        // Send fetching message
-        await socket.sendMessage(sender, {
-            text: `🔎 Fetching channel info for: *${inviteId}*`
-        }, { quoted: shonux });
-
-        // Get channel metadata
-        const metadata = await socket.newsletterMetadata("invite", inviteId);
-
-        if (!metadata || !metadata.id) {
-            return await socket.sendMessage(sender, {
-                text: '❌ Channel not found or inaccessible.'
-            }, { quoted: shonux });
-        }
-
-        // Format details
-        const infoText = `
+    const infoText = `
 📡 *WhatsApp Channel Info*
 
 🆔 *ID:* ${metadata.id}
-📌 *Name:* ${metadata.name}
-👥 *Followers:* ${metadata.subscribers?.toLocaleString() || 'N/A'}
-📅 *Created on:* ${metadata.creation_time ? new Date(metadata.creation_time * 1000).toLocaleString("si-LK") : 'Unknown'}
+📌 *Name:* ${metadata.subject || 'Unknown'}
+👥 *Followers:* ${metadata.subscribers ? metadata.subscribers.toLocaleString() : 'N/A'}
+📅 *Created on:* ${metadata.creationTs ? new Date(metadata.creationTs * 1000).toLocaleString("si-LK") : 'Unknown'}
 
 ${botName}
 `;
 
-        // Send preview if available
-        if (metadata.preview) {
-            await socket.sendMessage(sender, {
-                image: { url: `https://pps.whatsapp.net${metadata.preview}` },
-                caption: infoText
-            }, { quoted: shonux });
-        } else {
-            await socket.sendMessage(sender, {
-                text: infoText
-            }, { quoted: shonux });
-        }
+    if (metadata.preview) {
+      const img = metadata.preview.startsWith('http')
+        ? metadata.preview
+        : `https://pps.whatsapp.net${metadata.preview}`;
 
-    } catch (err) {
-        console.error("CID command error:", err);
-        await socket.sendMessage(sender, {
-            text: '⚠️ An unexpected error occurred while fetching channel info.'
-        }, { quoted: shonux });
+      await socket.sendMessage(sender, {
+        image: { url: img },
+        caption: infoText
+      }, { quoted: shonux });
+    } else {
+      await socket.sendMessage(sender, { text: infoText }, { quoted: shonux });
     }
 
-    break;
-}
+  } catch (err) {
+    console.error("CID command error:", err);
+    await socket.sendMessage(sender, {
+      text: '⚠️ Failed to fetch channel info. The channel may be private or unreachable.'
+    }, { quoted: shonux });
+  }
 
+  break;
+		}
+			  
 case 'owner': {
   try {
     // vCard with multiple details
