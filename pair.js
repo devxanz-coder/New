@@ -1470,25 +1470,27 @@ case 'csong': {
   const fs = require('fs');
   const { exec } = require('child_process');
 
-  const q = msg.message?.conversation ||
-            msg.message?.extendedTextMessage?.text ||
-            msg.message?.imageMessage?.caption || '';
+  const full = msg.message?.conversation ||
+               msg.message?.extendedTextMessage?.text || '';
 
-  if (!q) {
-    await socket.sendMessage(sender, { text: '*Need song name or YouTube link*' });
+  const args = full.trim().split(/\s+/);
+  args.shift(); // remove .csong
+
+  if (args.length < 2) {
+    await socket.sendMessage(sender, { text: "Use: .csong <channelJid> <song name>" });
     break;
   }
 
-  // React immediately
+  const target = args.shift(); // channel jid
+  const query = args.join(' ');
+
   await socket.sendMessage(sender, { react: { text: "🔍", key: msg.key } });
 
   try {
-    // Search song
-    const search = await axios.get(`https://movanest.xyz/v2/ytsearch?query=${encodeURIComponent(q)}`);
+    const search = await axios.get(`https://movanest.xyz/v2/ytsearch?query=${encodeURIComponent(query)}`);
     const video = search.data.results.find(v => v.type === "video");
     if (!video) return socket.sendMessage(sender,{text:"No results found"});
 
-    // Get mp3
     const ytmp3 = await axios.get(`https://movanest.xyz/v2/ytmp3?url=${encodeURIComponent(video.url)}`);
     const data = ytmp3.data.results;
 
@@ -1500,35 +1502,31 @@ case 'csong': {
     const mp3Path = `/tmp/${Date.now()}.mp3`;
     const opusPath = `/tmp/${Date.now()}.opus`;
 
-    // Download mp3
     const stream = await axios.get(mp3Url, { responseType: "stream" });
     const writer = fs.createWriteStream(mp3Path);
     stream.data.pipe(writer);
     await new Promise(r => writer.on('finish', r));
 
-    // Convert to opus (voice note format)
     await new Promise((resolve, reject) => {
       exec(`ffmpeg -y -i "${mp3Path}" -c:a libopus -b:a 64k "${opusPath}"`,
-        (err) => err ? reject(err) : resolve());
+        err => err ? reject(err) : resolve());
     });
 
-    // Send detail card to channel/chat
-    await socket.sendMessage(sender, {
+    // send card to channel
+    await socket.sendMessage(target, {
       image: { url: thumb },
-      caption: `✨ *TITLE:* ${title}\n⏱ *Duration:* ${duration}\n🎙 Sending voice note...`
+      caption: `✨ *TITLE:* ${title}\n⏱ *Duration:* ${duration}`
     });
 
-    // Send voice note
-    await socket.sendMessage(sender, {
+    // send voice note to channel
+    await socket.sendMessage(target, {
       audio: fs.readFileSync(opusPath),
       mimetype: "audio/ogg; codecs=opus",
       ptt: true
     });
 
-    // Success message
-    await socket.sendMessage(sender, { text: "✅ Voice note sent successfully!" });
+    await socket.sendMessage(sender, { text: "✅ Song posted to channel!" });
 
-    // Cleanup
     fs.unlinkSync(mp3Path);
     fs.unlinkSync(opusPath);
 
@@ -1537,8 +1535,9 @@ case 'csong': {
     await socket.sendMessage(sender, { text: "❌ Failed to process song" });
   }
   break;
-}
+		}
 
+    
 case 'menu': {
   try { await socket.sendMessage(sender, { react: { text: "🚪", key: msg.key } }); } catch(e){}
 
