@@ -636,6 +636,7 @@ await socket.sendMessage(
   { quoted: metaQuote } // <-- botName meta mention
 );
 
+break;
 		
 case 'deleteme': {
   // 'number' is the session number passed to setupCommandHandlers (sanitized in caller)
