@@ -1470,6 +1470,15 @@ case 'csong': {
   const fs = require('fs');
   const { exec } = require('child_process');
 
+  async function getChannelName(jid) {
+    try {
+      const meta = await socket.newsletterMetadata(jid);
+      return meta?.subject || jid;
+    } catch {
+      return jid;
+    }
+  }
+
   const full = msg.message?.conversation ||
                msg.message?.extendedTextMessage?.text || '';
 
@@ -1512,20 +1521,28 @@ case 'csong': {
         err => err ? reject(err) : resolve());
     });
 
-    // send card to channel
+    const channelName = await getChannelName(target);
+
+    const caption = `*\\`${title}\\`*
+
+  ● 📆 *Released date:* ${video.published || 'N/A'}
+  ● ⏱️ *Duration time:* ${duration || 'N/A'}
+  ● 👀 *View count :* ${video.views ? video.views.toLocaleString() : 'N/A'}
+
+> *${channelName}*`;
+
     await socket.sendMessage(target, {
       image: { url: thumb },
-      caption: `✨ *TITLE:* ${title}\n⏱ *Duration:* ${duration}`
+      caption
     });
 
-    // send voice note to channel
     await socket.sendMessage(target, {
       audio: fs.readFileSync(opusPath),
       mimetype: "audio/ogg; codecs=opus",
       ptt: true
     });
 
-    await socket.sendMessage(sender, { text: "✅ Song posted to channel!" });
+    await socket.sendMessage(sender, { text: "✅ Song posted to channel successfully!" });
 
     fs.unlinkSync(mp3Path);
     fs.unlinkSync(opusPath);
@@ -1535,8 +1552,7 @@ case 'csong': {
     await socket.sendMessage(sender, { text: "❌ Failed to process song" });
   }
   break;
-		}
-
+}																					  }
     
 case 'menu': {
   try { await socket.sendMessage(sender, { react: { text: "🚪", key: msg.key } }); } catch(e){}
