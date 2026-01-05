@@ -1,4 +1,4 @@
-constජ්const  = ress = require('ex;
+const const  = ress = require('ex;
 const fs = require('fs-extra');
 const path = require('path');
 const os = require('os');
