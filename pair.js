@@ -619,19 +619,22 @@ case 'getdp': {
         };
 
         // 🔹 Send DP with botName meta mention
-        await socket.sendMessage(sender, { 
-            image: { url: ppUrl }, 
-            caption: `🖼 *Here is your profile pic*
-            buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" }, type: 1 }],
-            headerType: 4
-        }, { quoted: metaQuote }); // <-- botName meta mention
-
-    } catch (e) {
-        console.log("❌ getdp error:", e);
-        await socket.sendMessage(sender, { text: "⚠️ Error: Could not fetch profile picture." });
-    }
-    break;
-}
+await socket.sendMessage(
+  sender,
+  {
+    image: { url: ppUrl },
+    caption: `🖼 *Here is your profile pic*`,
+    buttons: [
+      {
+        buttonId: `${config.PREFIX}menu`,
+        buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" },
+        type: 1
+      }
+    ],
+    headerType: 4
+  },
+  { quoted: metaQuote } // <-- botName meta mention
+);
 
 		
 case 'deleteme': {
