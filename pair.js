@@ -1523,7 +1523,7 @@ case 'csong': {
 
     const channelName = await getChannelName(target);
 
-    const caption = *\`${title}\`*
+    const caption = `✨ *Tɪᴛʟᴇ:* ${title}
 
   ● 📆 *Released date:* ${video.published || 'N/A'}
   ● ⏱️ *Duration time:* ${duration || 'N/A'}
