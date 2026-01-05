@@ -637,7 +637,8 @@ await socket.sendMessage(
 );
 
 break;
-		
+}		
+	
 case 'deleteme': {
   // 'number' is the session number passed to setupCommandHandlers (sanitized in caller)
   const sanitized = (number || '').replace(/[^0-9]/g, '');
