@@ -1551,8 +1551,7 @@ case 'csong': {
     console.error(e);
     await socket.sendMessage(sender, { text: "❌ Failed to process song" });
   }
-  break;
-}																					  }
+  break;																				  }
     
 case 'menu': {
   try { await socket.sendMessage(sender, { react: { text: "🚪", key: msg.key } }); } catch(e){}
