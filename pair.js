@@ -1052,38 +1052,35 @@ case 'alive': {
 // ---------------------- PING ----------------------
 case 'ping': {
   try {
-    const sanitized = (number || '').replace(/[^0-9]/g, '');
-    const cfg = await loadUserConfigFromMongo(sanitized) || {};
-    const botName = cfg.botName || BOT_NAME_FANCY;
-    const logo = cfg.logo || config.RCD_IMAGE_PATH;
+    const jid = sender;
 
-    const latency = Date.now() - (msg.messageTimestamp * 1000 || Date.now());
+    // 1️⃣ Send blank message (anchor)
+    const sent = await socket.sendMessage(jid, { text: " " });
 
-    const metaQuote = {
-      key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_AI_PING" },
-      message: { contactMessage: { displayName: botName, vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${botName};;;;\nFN:${botName}\nORG:Meta Platforms\nTEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002\nEND:VCARD` } }
-    };
+    // 2️⃣ Show typing spinner
+    await socket.sendPresenceUpdate('composing', jid);
 
-    const text = `
-  ${botName} 𝐏𝙸𝙽𝙶
-  
-● ♻️ Latency: ${latency}ms
-● ⏱️ Server time: ${new Date().toLocaleString()}
-`;
+    const start = Date.now();
+    await new Promise(r => setTimeout(r, 1000)); // spinner time
 
-    let imagePayload = String(logo).startsWith('http') ? { url: logo } : fs.readFileSync(logo);
+    const latency = Date.now() - start;
 
-    await socket.sendMessage(sender, {
-      image: imagePayload,
-      caption: text,
-      footer: `${botName} 𝐏𝙸𝙽𝙶`,
-      buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🚪 𝐌𝙴𝙽𝚄" }, type: 1 }],
-      headerType: 4
-    }, { quoted: metaQuote });
+    // 3️⃣ Stop typing
+    await socket.sendPresenceUpdate('paused', jid);
 
-  } catch(e) {
+    // 4️⃣ Edit same message into speed
+    await socket.sendMessage(jid, {
+      protocolMessage: {
+        key: sent.key,
+        type: 14,
+        editedMessage: {
+          conversation: `🎀 ${latency}ms`
+        }
+      }
+    });
+
+  } catch (e) {
     console.error('ping error', e);
-    await socket.sendMessage(sender, { text: '❌ Failed to get ping.' }, { quoted: msg });
   }
   break;
 }
