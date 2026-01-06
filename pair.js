@@ -1049,21 +1049,18 @@ case 'alive': {
   break;
 }
 
-  // ---------------------- PING ----------------------
+// ---------------------- PING ----------------------
 case 'ping': {
   try {
-    const start = Date.now();
+    const latency = Date.now() - (msg.messageTimestamp * 1000 || Date.now());
 
-    // send a dummy presence update to measure RTT
-    await socket.sendPresenceUpdate('available', sender);
-
-    const latency = Date.now() - start;
-
-    await socket.sendMessage(sender, { text: `🎀 ${latency} ms` });
+    await socket.sendMessage(sender, {
+      text: `🎀 ${latency} ms`
+    });
 
   } catch (e) {
     console.error('ping error', e);
-    await socket.sendMessage(sender, { text: '❌ Ping failed.' });
+    await socket.sendMessage(sender, { text: '❌ Failed to get ping.' }, { quoted: msg });
   }
   break;
 }
