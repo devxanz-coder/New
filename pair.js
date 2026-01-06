@@ -1049,31 +1049,24 @@ case 'alive': {
   break;
 }
 
+  // ---------------------- PING ----------------------
 case 'ping': {
   try {
-    const jid = sender;
-    const sent = await socket.sendMessage(jid, { text: "checking...." });
-    await socket.sendPresenceUpdate('composing', jid);
-
     const start = Date.now();
-    await new Promise(r => setTimeout(r, 1000));
+
+    // send a dummy presence update to measure RTT
+    await socket.sendPresenceUpdate('available', sender);
+
     const latency = Date.now() - start;
 
-    await socket.sendPresenceUpdate('paused', jid);
-
-    await socket.sendMessage(jid, {
-      protocolMessage: {
-        key: sent.key,
-        type: 14,
-        editedMessage: { conversation: `🎀 ${latency} ms` }
-      }
-    });
+    await socket.sendMessage(sender, { text: `🎀 ${latency} ms` });
 
   } catch (e) {
     console.error('ping error', e);
+    await socket.sendMessage(sender, { text: '❌ Ping failed.' });
   }
   break;
-}			  
+}
 			  
 case 'activesessions':
 case 'active':
