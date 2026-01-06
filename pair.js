@@ -1049,33 +1049,23 @@ case 'alive': {
   break;
 }
 
-// ---------------------- PING ----------------------
 case 'ping': {
   try {
     const jid = sender;
-
-    // 1️⃣ Send blank message (anchor)
-    const sent = await socket.sendMessage(jid, { text: " " });
-
-    // 2️⃣ Show typing spinner
+    const sent = await socket.sendMessage(jid, { text: "checking...." });
     await socket.sendPresenceUpdate('composing', jid);
 
     const start = Date.now();
-    await new Promise(r => setTimeout(r, 1000)); // spinner time
-
+    await new Promise(r => setTimeout(r, 1000));
     const latency = Date.now() - start;
 
-    // 3️⃣ Stop typing
     await socket.sendPresenceUpdate('paused', jid);
 
-    // 4️⃣ Edit same message into speed
     await socket.sendMessage(jid, {
       protocolMessage: {
         key: sent.key,
         type: 14,
-        editedMessage: {
-          conversation: `🎀 ${latency}ms`
-        }
+        editedMessage: { conversation: `🎀 ${latency} ms` }
       }
     });
 
@@ -1083,7 +1073,8 @@ case 'ping': {
     console.error('ping error', e);
   }
   break;
-}
+}			  
+			  
 case 'activesessions':
 case 'active':
 case 'bots': {
