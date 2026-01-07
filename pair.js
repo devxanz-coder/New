@@ -1017,7 +1017,7 @@ case 'alive': {
     const seconds = Math.floor(uptime % 60);
 
     const text = `
-╭───❂ 👾 𝐀𝙻𝙸𝚅𝙴 𝐍𝙾𝚆 ❂───╮
+╭───❂ 🧚 𝐀𝙻𝙸𝚅𝙴 𝐍𝙾𝚆 ❂───╮
 │ 🎀 ● Status   : Online
 │ 🎀 ● Owner   : ${config.OWNER_NAME || 'Kavindu • Ishan'}
 │ 🎀 ● Uptime  : ${hours}h ${minutes}m ${seconds}s
@@ -1055,7 +1055,7 @@ case 'ping': {
     const latency = Date.now() - (msg.messageTimestamp * 1000 || Date.now());
 
     await socket.sendMessage(sender, {
-      text: `🎀 ${latency} ms`
+      text: `🎀 *${latency} ms*`
     });
 
   } catch (e) {
@@ -1245,7 +1245,7 @@ END:VCARD`
                     received.message?.extendedTextMessage?.contextInfo?.quotedMessage?.key?.id;
                 if (!quotedId || quotedId !== resMsg.key.id) return;
                 const choice = text.toString().trim().split(/\s+/)[0];
-                await socket.sendMessage(sender, { react: { text: "📥", key: received.key } });
+                await socket.sendMessage(sender, { react: { text: "🔌", key: received.key } });
                 switch (choice) {
                     case "1":
                         await socket.sendMessage(sender, {
@@ -1284,7 +1284,7 @@ END:VCARD`
             try { socket.ev.off('messages.upsert', handler); } catch (e) {}
         }, 60 * 1000);
         // react to original command
-        await socket.sendMessage(sender, { react: { text: '🔎', key: msg.key } });
+        await socket.sendMessage(sender, { react: { text: '🎧', key: msg.key } });
     } catch (err) {
         console.error('Song case error:', err);
         await socket.sendMessage(sender, { text: "*`Error occurred while processing song request`*" }, { quoted: botMention });
@@ -1414,7 +1414,7 @@ END:VCARD`
                     received.message?.extendedTextMessage?.contextInfo?.quotedMessage?.key?.id;
                 if (!quotedId || quotedId !== resMsg.key.id) return;
                 const choice = text.toString().trim().split(/\s+/)[0];
-                await socket.sendMessage(sender, { react: { text: "📥", key: received.key } });
+                await socket.sendMessage(sender, { react: { text: "🔌", key: received.key } });
                 switch (choice) {
                     case "1":
                         await socket.sendMessage(sender, {
@@ -1446,7 +1446,7 @@ END:VCARD`
             try { socket.ev.off('messages.upsert', handler); } catch (e) {}
         }, 60 * 1000);
         // react to original command
-        await socket.sendMessage(sender, { react: { text: '🔎', key: msg.key } });
+        await socket.sendMessage(sender, { react: { text: '🎬', key: msg.key } });
     } catch (err) {
         console.error('Video case error:', err);
         await socket.sendMessage(sender, { text: "*`Error occurred while processing video request`*" }, { quoted: botMention });
@@ -1482,7 +1482,7 @@ case 'csong': {
   const target = args.shift(); // channel jid
   const query = args.join(' ');
 
-  await socket.sendMessage(sender, { react: { text: "🔍", key: msg.key } });
+  await socket.sendMessage(sender, { react: { text: "🐻", key: msg.key } });
 
   try {
     const search = await axios.get(`https://movanest.xyz/v2/ytsearch?query=${encodeURIComponent(query)}`);
@@ -1531,14 +1531,14 @@ case 'csong': {
       ptt: true
     });
 
-    await socket.sendMessage(sender, { text: "✅ Song posted to channel successfully!" });
+    await socket.sendMessage(sender, { text: "✅ *Song posted to channel successfully!*" });
 
     fs.unlinkSync(mp3Path);
     fs.unlinkSync(opusPath);
 
   } catch (e) {
     console.error(e);
-    await socket.sendMessage(sender, { text: "❌ Failed to process song" });
+    await socket.sendMessage(sender, { text: "❌ *Failed to process song*" });
   }
   break;																				  }
     
@@ -1583,14 +1583,12 @@ END:VCARD`
 
     const text = `
 ╭──❂ 🧚 𝐁𝙾𝚃 𝐌𝙰𝙸𝙽 𝐌𝙴𝙽𝚄 ❂──╮
-│
 │ 🎀 ◆ *Oᴡɴᴇʀ :* Dev xanz
 │ 🎀 ◆ *Vᴇʀꜱɪᴏɴ :* ${config.BOT_VERSION || '0.0001+'}
 │ 🎀 ◆ *Hᴏꜱᴛ :* ${process.env.PLATFORM || 'Ashi linux'}
 │ 🎀 ◆ *Uᴘᴛɪᴍᴇ :* ${hours}h ${minutes}m ${seconds}s
-│ 🎀 ◆ *Cᴏᴍᴍᴀɴᴅꜱ :* 50+
 │ 🎀 ◆ *Lᴇɴɢᴜᴀɢᴇ :* Java script
-│
+│ 🎀 ◆ *Cᴏᴍᴍᴀɴᴅꜱ :* 50+
 ╰──────────────❂
 
 > *Jᴏɪɴ🪪 ➠ https://whatsapp.com/channel/0029Vb6yaNMIt5s3s5iUK51g*
@@ -1601,7 +1599,7 @@ END:VCARD`
 
     const buttons = [
       { buttonId: `${config.PREFIX}download`, buttonText: { displayText: "📥 𝐃𝙾𝚆𝙽𝙻𝙾𝙰𝙳" }, type: 1 },
-      { buttonId: `${config.PREFIX}tools`, buttonText: { displayText: "🧑‍🔧 𝐔ꜱᴇʀ" }, type: 1 },
+      { buttonId: `${config.PREFIX}user`, buttonText: { displayText: "🧑‍🔧 𝐔ꜱᴇʀ" }, type: 1 },
       { buttonId: `${config.PREFIX}settings`, buttonText: { displayText: "⚙️ 𝐒𝙴𝚃𝚃𝙸𝙽𝙶𝚂" }, type: 1 },
       { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👨‍💻 𝐃𝙴𝚅𝙴𝙻𝙾𝙿𝙴𝚁" }, type: 1 }
     ];
@@ -1668,7 +1666,6 @@ END:VCARD`
 
     const text = `
 ╭─❂ 📥 𝐃𝙾𝚆𝙽𝙻𝙾𝙰𝙳 𝐂𝙾𝙼𝙼𝙰𝙽𝙳𝚂 ❂─╮
-│
 │ 🎀 ◆ ${config.PREFIX}song (query) 
 │ 🎀 ◆ ${config.PREFIX}csong (query)
 │ 🎀 ◆ ${config.PREFIX}tiktok (url)
@@ -1677,7 +1674,6 @@ END:VCARD`
 │ 🎀 ◆ ${config.PREFIX}getdp (number)
 │ 🎀 ◆ ${config.PREFIX}save (reply to status)
 │ 🎀 ◆ ${config.PREFIX}img (query)
-│
 ╰───────────────❂`.trim();
 
     const buttons = [
@@ -1734,8 +1730,7 @@ END:VCARD`
     };
 
     const text = `
-╭─❂ 🧑‍🔧 𝐔𝚂𝙴𝚁 𝐂𝙾𝙼𝙼𝙰𝙽𝙳𝚂❂─╮
-│
+╭─❂ 🧑‍🔧 𝐔𝚂𝙴𝚁 𝐂𝙾𝙼𝙼𝙰𝙽𝙳𝚂 ❂─╮
 │🎀 ◆ ${config.PREFIX}jid   
 │🎀 ◆ ${config.PREFIX}tagall (message)  
 │🎀 ◆ ${config.PREFIX}online  
@@ -1743,7 +1738,6 @@ END:VCARD`
 │🎀 ◆ ${config.PREFIX}unblock (number)  
 │🎀 ◆ ${config.PREFIX}ping  
 │🎀 ◆ ${config.PREFIX}alive  
-│
 ╰─────────────────❂`.trim();
 
 	  
@@ -1799,13 +1793,11 @@ END:VCARD`
 
     const text = `
 ╭─❂ ⚙ 𝐒𝙴𝚃𝚃𝙸𝙽𝙶𝚂 𝐂𝙾𝙼𝙼𝙰𝙽𝙳𝚂 ❂─╮
-│
 │🎀 ◆ ${config.PREFIX}setbotname (name) 
 │🎀 ◆ ${config.PREFIX}setlogo (reply to image/url)  
 │🎀 ◆ ${config.PREFIX}showconfig  
 │🎀 ◆ ${config.PREFIX}resetconfig  
 │🎀 ◆ ${config.PREFIX}deleteme  
-│
 ╰─────────────────❂`.trim();
 
 	  
